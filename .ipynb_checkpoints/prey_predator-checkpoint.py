@@ -1,4 +1,3 @@
-
 import numpy as np
 import matplotlib.pyplot as plt
 
@@ -16,9 +15,9 @@ def simulate_chase(R=100, u=1, V=1, dt=0.01):
         Tc (float): Time until capture (seconds)
         positions (list): List of (prey_pos, predator_pos) tuples over time
     """
-    # Initial positions (explicitly as float arrays)
-    prey_pos = np.array([R, 0], dtype=np.float64)  # Start prey at (R, 0)
-    predator_pos = np.array([0, 0], dtype=np.float64)  # Start predator at origin
+    # Initial positions
+    prey_pos = np.array([R, 0])  # Start prey at (R, 0)
+    predator_pos = np.array([0, 0])  # Start predator at origin
     
     positions = [(prey_pos.copy(), predator_pos.copy())]
     t = 0
@@ -32,13 +31,9 @@ def simulate_chase(R=100, u=1, V=1, dt=0.01):
         direction = prey_pos - predator_pos
         distance = np.linalg.norm(direction)
         
-        # Check for capture with more robust condition
-        if distance < V * dt:  # Capture when predator can reach prey in one step
+        # Check for capture
+        if distance < 0.1:  # Capture condition
             return t, positions
-        
-        # Safety check to prevent infinite loops
-        if t > 1000:  # Max simulation time (adjust as needed)
-            raise RuntimeError("Simulation did not converge - predator may never catch prey")
         
         # Normalize direction and move predator
         predator_pos += (direction / distance) * V * dt
