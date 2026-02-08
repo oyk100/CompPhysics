@@ -94,7 +94,12 @@ def rubber_bug_simulation(
         ax.set_title("Distance between Bug and End of Rubber Band")
         ax.grid(True)
         if created_ax:
-            plt.show()
+            backend = plt.get_backend().lower()
+            if "agg" in backend:
+                # Headless backend: avoid non-interactive show() warning.
+                plt.close(ax.figure)
+            else:
+                plt.show()
         else:
             plt.draw()
 
